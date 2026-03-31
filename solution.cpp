@@ -40,6 +40,14 @@ private:
         dfs(node->right, depth + 1, node->val);
     }
 
+    // Delete tree to prevent memory leak
+    void deleteTree(TreeNode* node) {
+        if (!node) return;
+        deleteTree(node->left);
+        deleteTree(node->right);
+        delete node;
+    }
+
 public:
     bool areCousins(TreeNode* root, int x, int y) {
         depth_map.clear();
@@ -61,6 +69,10 @@ public:
     TreeNode* buildTreeFromPreorder(vector<int>& preorder) {
         idx = 0;
         return buildTree(preorder);
+    }
+
+    void freeTree(TreeNode* root) {
+        deleteTree(root);
     }
 };
 
@@ -86,6 +98,9 @@ int main() {
         int result = sol.areCousins(root, query.first, query.second) ? 1 : 0;
         cout << result << endl;
     }
+
+    // Free allocated memory
+    sol.freeTree(root);
 
     return 0;
 }
